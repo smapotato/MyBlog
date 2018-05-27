@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% load blog_tags %}
+{% block title %}
+    关于
+{% endblock %}
+{% block nav_blog_active %}
+    active
+{% endblock %}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static "blog/blog_archive.css" %}">
+{% endblock %}
+{% block content %}
+    <div class="archive-container">
+        <div class="container archive">
+            <h3>关于我</h3>
+            <p>自学Python一年，Python爱好者，喜欢写代码，目前正在学习Django，喜欢研究技术问题</p>
+            <h3>关于博客</h3>
+            <p>此博客基于Python3.6+Django2.0开发，目的是希望整理学习上的笔记，记录下学习中遇到的难题</p>
+            <h3>联系我</h3>
+            <p>
+            <ul>
+                <li>微信：sy151323</li>
+                <li>邮箱：1754935816@qq.com</li>
+            </ul>
+            <p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+h3.home-content {
+    font-size: 222%;
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+div#container {
+    margin: 0 auto;
+}
+
+div.hot-data {
+    text-align: center;
+    margin-top: 10em;
+}
+
+div.col-xs-4{
+    margin-top: 5em;
+}
+
+div.btn-primary{
+    margin-top: 1em;
+}

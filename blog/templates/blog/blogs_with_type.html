@@ -1,0 +1,25 @@
+{% extends "blog/blog_list.html" %}
+{% block title %}
+    {{ blog_type.type_name }}
+{% endblock %}
+
+{% block blog_list_title %}
+    分类：{{ blog_type.type_name }}
+{% endblock %}
+
+{% block pagination %}
+    {% for page_of_blog in page_range %}
+        {% if page_of_blog == page_of_blogs.number %}
+            <li class="active"><span>{{ page_of_blog }}</span></li>
+        {% else %}
+            {% if page_of_blog == "..." %}
+                <li><span>{{ page_of_blog }}</span></li>
+            {% else %}
+                <li>
+                    <a href="{% url "blog:blog_with_type" blog_type.pk %}?page={{ page_of_blog }}">{{ page_of_blog }}</a>
+                </li>
+            {% endif %}
+        {% endif %}
+        {#                            <li><a href="?page={{ page_of_blog }}">{{ page_of_blog }}</a></li>#}
+    {% endfor %}
+{% endblock %}

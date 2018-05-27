@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+{% load blog_tags %}
+{% block title %}
+    我的网站
+{% endblock %}
+{% block nav_blog_active %}
+    active
+{% endblock %}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static "blog/blog.css" %}">
+{% endblock %}
+{% block content %}
+    <div class="container content">
+        <div class="row">
+            <div class="col-xs12 col-sm-8 col-md-8 col-lg-8">
+                {#                <div class="panel panel-default">#}
+                {#                    <div class="panel panel-heading">#}
+                {#                        {% block blog_list_title %}#}
+                {#                            <博客列表></博客列表>#}
+                {#                        {% endblock %}#}
+                {#                    </div>#}
+                {#                    <div class="panel-body">#}
+                {#                        {% for blog in page_of_blogs.object_list %}#}
+                {#                            <div class="blog">#}
+                {#                                <h3><a href="{% url "blog:blog_detail" blog.id %}">{{ blog.title }}</a></h3>#}
+                {#                                <p class="blog-info">#}
+                {#                                    <span class="glyphicon glyphicon-tag"></span><a#}
+                {#                                        href="{% url "blog:blog_with_type" blog.blog_type.pk %}">{{ blog.blog_type.type_name }}</a>#}
+                {#                                    &nbsp;&nbsp;#}
+                {#                                    <span class="glyphicon glyphicon-calendar"></span>{{ blog.create_time|date:"Y-m-d" }}#}
+                {#                                    &nbsp;&nbsp;#}
+                {#                                    <span class="glyphicon glyphicon-eye-open">{{ blog.get_read_num }}</span>#}
+                {#                                    &nbsp;&nbsp;#}
+                {#                                    <span class="glyphicon glyphicon-comment">({{ blog|comment_sum }})</span>#}
+                {#                                </p>#}
+                {#                                <p>{{ blog.content|striptags|truncatechars:120 }}</p>#}
+                {#                            </div>#}
+                {#                        {% empty %}#}
+                {#                            <div class="blog">#}
+                {#                                <p> --暂无博客-- </p>#}
+                {#                            </div>#}
+                {#                        {% endfor %}#}
+                {#                    </div>#}
+                {#                </div>#}
+                <div class="mod-info-flow">
+
+                    {% for blog in page_of_blogs.object_list %}
+
+                        <div class="blog">
+                            <h3>
+                                <div class="panel-title"><a
+                                        href="{% url "blog:blog_detail" blog.id %}">{{ blog.title }}</a></div>
+                            </h3>
+                            <span class="glyphicon glyphicon-tag"></span><a
+                                href="{% url "blog:blog_with_type" blog.blog_type.pk %}">{{ blog.blog_type.type_name }}</a>
+                            &nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-calendar"></span>{{ blog.create_time|date:"Y-m-d" }}
+                            &nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-eye-open"></span>{{ blog.get_read_num }}
+                            &nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-comment"></span>{{ blog|comment_sum }}
+                            <div class="distance">
+                                <p>
+                                    {{ blog.content|striptags|truncatechars:180 }}
+                                    <a href="{% url "blog:blog_detail" blog.id %}"
+                                       class="glyphicon glyphicon-menu-right">阅读更多</a>
+                                </p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="blog">
+                            <p> --暂无博客-- </p>
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div class="paginator">
+                    <ul class="pagination">
+                        <li>
+                            {% if page_of_blogs.has_previous %}
+                                <a href="?page={{ page_of_blogs.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            {% else %}
+                                <span aria-hidden="true">&laquo;</span>
+                            {% endif %}
+                        </li>
+                        {% block pagination %}
+                            {% for page_of_blog in page_range %}
+                                {% if page_of_blog == page_of_blogs.number %}
+                                    <li class="active"><span>{{ page_of_blog }}</span></li>
+                                {% else %}
+                                    {% if page_of_blog == "..." %}
+                                        <li><span>{{ page_of_blog }}</span></li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{% url "blog:blog_list" %}?page={{ page_of_blog }}">{{ page_of_blog }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                {#                            <li><a href="?page={{ page_of_blog }}">{{ page_of_blog }}</a></li>#}
+                            {% endfor %}
+                        {% endblock %}
+                        <li>
+                            {% if page_of_blogs.has_next %}
+                                <a href="?page={{ page_of_blogs.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            {% else %}
+                                <span aria-hidden="true">&laquo;</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <p>
+                        一共有{{ page_of_blogs.paginator.count }}篇博客
+                        当前第{{ page_of_blogs.number }}页， 共{{ page_of_blogs.paginator.num_pages }}页
+                    </p>
+                </div>
+            </div>
+            <div class="hidden-xs col-sm-4 col-md-4 col-lg-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">博客分类</div>
+                    <div class="panel-body">
+                        {% for blog_type in blog_types %}
+                            <ul class="list-group-item">
+                                <a href="{% url "blog:blog_with_type" blog_type.pk %}">{{ blog_type.type_name }}
+                                    <span class="badge label-primary">{{ blog_type|count }}</span>
+                                </a>
+                            </ul>
+                        {% empty %}
+                            <li>暂无分类</li>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class=" panel panel-primary">
+                    <div class="panel-heading">
+                        <span>热门文章</span>
+                    </div>
+                    <ul class="list-group">
+                        {% for popular_article in popular_articles %}
+                            <li class="list-group-item clearfix">
+                                <a href="{% url "blog:blog_detail" popular_article.content_object.id %}">
+                                    {{ popular_article.content_object.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {% if page_of_blogs.number == page_of_blogs.paginator.num_pages %}
+        {% if page_of_blogs.object_list|length <= 2 %}
+            <footer class="nav navbar-inverse navbar-fixed-bottom ">
+                <div class="container">
+                    <p class="m-0  navbar-brand">Welcome to visit my website,Copyright &copy; Clean Blog 2018</p>
+                </div>
+                <!-- /.container -->
+            </footer>
+        {% else %}
+            <footer class="nav navbar-inverse  ">
+                <div class="container">
+                    <p class="m-0  navbar-brand">Welcome to visit my website,Copyright &copy; Clean Blog 2018</p>
+                </div>
+                <!-- /.container -->
+            </footer>
+        {% endif %}
+
+    {% else %}
+        <footer class="nav navbar-inverse  ">
+            <div class="container">
+                <p class="m-0  navbar-brand">Welcome to visit my website,Copyright &copy; Clean Blog 2018</p>
+            </div>
+            <!-- /.container -->
+        </footer>
+    {% endif %}
+{% endblock %}
